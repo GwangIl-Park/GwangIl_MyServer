@@ -1,11 +1,14 @@
-// GwangIl_MyServer.cpp : Defines the entry point for the console application.
-//
 
 #include "stdafx.h"
-
-
+#include"IOCPServer.h"
 int main()
 {
-    return 0;
+	std::cout << sizeof(DWORD);
+	WSADATA wsadata;
+	WSAStartup(MAKEWORD(2, 2), &wsadata);
+	IOCPServer iocpserver;
+	iocpserver.CreateListenSocket();
+	iocpserver.InitIOCP();
+	getchar();
+	return 0;
 }
-
