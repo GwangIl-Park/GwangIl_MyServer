@@ -6,7 +6,7 @@
 #pragma once
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
-#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "wsock32.lib")
 #include "targetver.h"
 

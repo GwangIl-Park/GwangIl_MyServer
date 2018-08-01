@@ -44,7 +44,8 @@ public class LoginCtrl : MonoBehaviour
         Buffer.BlockCopy(Encoding.UTF8.GetBytes(MyPassword), 0, tempSendBuf, sizeof(int) * 4 + MyUserNameLeng, MyPasswordLeng);
 
         mainCtrl.GetSocket().Send(tempSendBuf, tempSendLen, 0);
-        StartCoroutine(mainCtrl.RecvMsg());
+        mainCtrl.SetUserName(MyUserName);
+        mainCtrl.RecvStart();
     }
 
     public void _Connect()
@@ -67,10 +68,11 @@ public class LoginCtrl : MonoBehaviour
         Buffer.BlockCopy(Encoding.UTF8.GetBytes(MyPassword), 0, tempSendBuf, sizeof(int) * 4 + MyUserNameLeng, MyPasswordLeng);
         
         tempSocket.Send(tempSendBuf, tempSendLen, 0);
-        StartCoroutine(mainCtrl.RecvMsg());
+        mainCtrl.SetUserName(MyUserName);
+        mainCtrl.RecvStart();
     }
 
-    public void PROC_PT_REG_USER(byte[] m_RecvBuf)
+    public void PROC_REG_USER(byte[] m_RecvBuf)
     {
         if (BitConverter.ToInt32(m_RecvBuf, 0) == 8)
         {
@@ -86,7 +88,7 @@ public class LoginCtrl : MonoBehaviour
         }
     }
 
-    public void PROC_PT_USER_LOGIN(byte[] m_RecvBuf)
+    public void PROC_USER_LOGIN(byte[] m_RecvBuf)
     {
         if (BitConverter.ToInt32(m_RecvBuf, 0) == 8)
         {

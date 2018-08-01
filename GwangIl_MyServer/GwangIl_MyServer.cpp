@@ -3,7 +3,6 @@
 #include"IOCPServer.h"
 int main()
 {
-	std::cout << sizeof(DWORD);
 	WSADATA wsadata;
 	WSAStartup(MAKEWORD(2, 2), &wsadata);
 	IOCPServer iocpserver;

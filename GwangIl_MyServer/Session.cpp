@@ -62,9 +62,6 @@ BOOL Session::InitRead()
 
 BOOL Session::OnConnected(HANDLE iocp_handle)
 {
-	std::cout << "onconnected" << std::endl;
-	std::cout << session_socket << std::endl;
-	std::cout << index << std::endl;
 	CreateIoCompletionPort((HANDLE)session_socket, iocp_handle, (ULONG_PTR)session_socket, 0);
 	InitRead();
 	return TRUE;
@@ -72,9 +69,6 @@ BOOL Session::OnConnected(HANDLE iocp_handle)
 
 BOOL Session::OnRead(DWORD packetLeng)
 {
-	std::cout << "onread" << std::endl;
-	std::cout << session_socket << std::endl;
-	std::cout << index << std::endl;
 	ReadPacket(session_read_buffer, packetLeng);
 	InitRead();
 	return TRUE;
@@ -89,9 +83,6 @@ BOOL Session::Write(DWORD packetLeng, DWORD protocol, BYTE* data)
 	wsabuf.len = packetLeng;
 	DWORD numberOfBytes;
 	DWORD flag = 0;
-	std::cout << "write" << std::endl;
-	std::cout << session_socket << std::endl;
-	std::cout << index << std::endl;
 	INT sended = WSASend(session_socket, &wsabuf, 1, &numberOfBytes, flag, &overlapped_write.overlapped, NULL);
 	if (sended == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING)
 	{

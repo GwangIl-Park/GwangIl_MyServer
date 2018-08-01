@@ -18,12 +18,10 @@ BOOL Database::DBInsertUser(CHAR* m_name, CHAR* m_password)
 	sprintf(query, "insert into user values ('%s', '%s')", m_name, m_password);
 	if (mysql_query(&mysql, query) != 0)
 	{
-		std::cout << mysql_error(&mysql);
 		return FALSE;
 	}
 
 	UserManager::getInstance().SetUserCount();
-	std::cout << "가입" << std::endl;
 	return TRUE;
 }
 
@@ -37,7 +35,6 @@ BOOL Database::DBLoginUser(CHAR* m_name, CHAR* m_password)
 
 	if (mysql_query(&mysql, query) != 0)
 	{
-		std::cout << mysql_error(&mysql) << std::endl;
 		return FALSE;
 	}
 
@@ -45,14 +42,12 @@ BOOL Database::DBLoginUser(CHAR* m_name, CHAR* m_password)
 
 	if (Sql_Result->row_count == 0)
 	{
-		std::cout << "존재하지 않는 유저" << std::endl;
 		mysql_free_result(Sql_Result);
 		return FALSE;
 	}
 
 	if (strcmp(mysql_fetch_row(Sql_Result)[0], m_password) != 0)
 	{
-		std::cout << "비번틀림" << std::endl;
 		mysql_free_result(Sql_Result);
 		return FALSE;
 	}

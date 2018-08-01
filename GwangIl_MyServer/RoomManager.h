@@ -9,5 +9,9 @@ private:
 	std::vector<Room*> vector_room;
 public:
 	BOOL RoomManagerInit();
-	VOID GetUserNum(INT *m_userNum);
+
+	INT GetUserNum(INT m_roomNum);
+	VOID GetAllUserNum(INT *m_userNum);
+	VOID UserNumInc(INT m_roomNum);
+	VOID UserNumDec(INT m_roomNum);
 };

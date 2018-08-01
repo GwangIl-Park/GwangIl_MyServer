@@ -34,15 +34,56 @@ BOOL UserManager::CheckUserLogin(CHAR *m_name)
 	return FALSE;
 }
 
-VOID UserManager::SetUserLocation(DWORD m_index, Location m_location)
+INT UserManager::GetUserLocation(DWORD m_index)
+{
+	return vector_user[m_index]->GetLocation();
+}
+
+VOID UserManager::SetUserLocation(DWORD m_index, INT m_location)
 {
 	vector_user[m_index]->SetLocation(m_location);
 }
 
+VOID UserManager::GetRoomUsersName(BYTE *m_packet, INT m_Location, DWORD *m_packetLeng, INT m_myindex)
+{
+	DWORD totalNameLeng = 0;
+	for (INT i = 0;i < MAX_USER;i++)
+	{
+		if (vector_user[i]->GetConnected() == TRUE && i != m_myindex)
+		{
+			if (vector_user[i]->GetLocation() == m_Location)
+			{
+				DWORD tempNameLeng;
+				CHAR tempName[32];
+				strcpy(tempName, vector_user[i]->GetName());
+				tempNameLeng = strlen(tempName);
+				std::cout << tempNameLeng;
+				memcpy(m_packet + sizeof(INT) + totalNameLeng, &tempNameLeng, sizeof(DWORD));
+				memcpy(m_packet + sizeof(INT) + sizeof(DWORD) + totalNameLeng, tempName, tempNameLeng);
+				totalNameLeng += (sizeof(DWORD) + tempNameLeng);
+			}
+		}
+	}
+	*m_packetLeng += totalNameLeng;
+}
+
 VOID UserManager::WriteUser(DWORD m_index, BYTE *data, DWORD packetLeng, DWORD protocol)
 {
-	std::cout << m_index << std::endl;
 	vector_user[m_index]->Write(packetLeng, protocol, data);
+}
+
+VOID UserManager::WriteRoomUsers(INT m_location, BYTE *data, DWORD packetLeng, DWORD protocol)
+{
+	for (INT i = 0;i < MAX_USER;i++)
+	{
+		if (vector_user[i]->GetConnected() == TRUE)
+		{
+			if (vector_user[i]->GetLocation() == m_location)
+			{
+				vector_user[i]->Write(packetLeng, protocol, data);
+			}
+		}
+	}
 }
 
 VOID UserManager::WriteAll(BYTE *data, DWORD packetLeng, DWORD protocol)
