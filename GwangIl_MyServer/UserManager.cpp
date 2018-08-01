@@ -2,7 +2,7 @@
 #include"User.h"
 #include"UserManager.h"
 
-BOOL UserManager::UserManagerInit(SOCKET listen_socket)
+BOOL UserManager::UserManagerInit(const SOCKET listen_socket)
 {
 	UserCount = 0;
 	for (DWORD i = 0; i < MAX_USER; i++)
@@ -14,12 +14,17 @@ BOOL UserManager::UserManagerInit(SOCKET listen_socket)
 	return TRUE;
 }
 
-VOID UserManager::SetUserName(DWORD m_index, CHAR *m_name)
+VOID UserManager::SetUserName(const DWORD m_index, const CHAR *m_name)
 {
 	vector_user[m_index]->SetName(m_name);
 }
 
-BOOL UserManager::CheckUserLogin(CHAR *m_name)
+CHAR* UserManager::GetUsername(const DWORD m_index)
+{
+	return vector_user[m_index]->GetName();
+}
+
+BOOL UserManager::CheckUserLogin(const CHAR *m_name)
 {
 	for (DWORD i = 0;i < MAX_USER;i++)
 	{
@@ -34,18 +39,29 @@ BOOL UserManager::CheckUserLogin(CHAR *m_name)
 	return FALSE;
 }
 
-INT UserManager::GetUserLocation(DWORD m_index)
+INT UserManager::GetUserLocation(const DWORD m_index)
 {
 	return vector_user[m_index]->GetLocation();
 }
 
-VOID UserManager::SetUserLocation(DWORD m_index, INT m_location)
+VOID UserManager::SetUserLocation(const DWORD m_index, const INT m_location)
 {
 	vector_user[m_index]->SetLocation(m_location);
 }
 
-VOID UserManager::GetRoomUsersName(BYTE *m_packet, INT m_Location, DWORD *m_packetLeng, INT m_myindex)
+INT UserManager::GetUserCount() 
 {
+	return UserCount; 
+}
+
+VOID UserManager::UserCountInc() 
+{
+	UserCount++; 
+}
+
+VOID UserManager::GetRoomUsersName(BYTE *m_packet, const INT m_Location, DWORD *m_packetLeng, const INT m_myindex)
+{
+	//방에있는 유저들의 이름을 패킷에 복사
 	DWORD totalNameLeng = 0;
 	for (INT i = 0;i < MAX_USER;i++)
 	{
@@ -67,13 +83,15 @@ VOID UserManager::GetRoomUsersName(BYTE *m_packet, INT m_Location, DWORD *m_pack
 	*m_packetLeng += totalNameLeng;
 }
 
-VOID UserManager::WriteUser(DWORD m_index, BYTE *data, DWORD packetLeng, DWORD protocol)
+VOID UserManager::WriteUser(const DWORD m_index, const BYTE *data, const DWORD packetLeng, const DWORD protocol)
 {
+	//해당유저에게 write
 	vector_user[m_index]->Write(packetLeng, protocol, data);
 }
 
-VOID UserManager::WriteRoomUsers(INT m_location, BYTE *data, DWORD packetLeng, DWORD protocol)
+VOID UserManager::WriteRoomUsers(const INT m_location, const BYTE *data, const DWORD packetLeng, const DWORD protocol)
 {
+	//방에있는유저에게 write
 	for (INT i = 0;i < MAX_USER;i++)
 	{
 		if (vector_user[i]->GetConnected() == TRUE)
@@ -86,8 +104,9 @@ VOID UserManager::WriteRoomUsers(INT m_location, BYTE *data, DWORD packetLeng, D
 	}
 }
 
-VOID UserManager::WriteAll(BYTE *data, DWORD packetLeng, DWORD protocol)
+VOID UserManager::WriteAll(const BYTE *data, const DWORD packetLeng, const DWORD protocol)
 {
+	//접속한 모든 유저에게 write
 	for (INT i = 0;i < MAX_USER;i++)
 	{
 		if (vector_user[i]->GetConnected() == TRUE)

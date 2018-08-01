@@ -1,4 +1,5 @@
 #include"stdafx.h"
+#include"ThreadSync.h"
 #include"Room.h"
 #include"RoomManager.h"
 
@@ -14,7 +15,7 @@ BOOL RoomManager::RoomManagerInit()
 	return TRUE;
 }
 
-INT RoomManager::GetUserNum(INT m_roomNum)
+INT RoomManager::GetUserNum(const INT m_roomNum)
 {
 	return vector_room[m_roomNum]->GetUserNum();
 }
@@ -27,12 +28,16 @@ VOID RoomManager::GetAllUserNum(INT *m_userNum)
 	}
 }
 
-VOID RoomManager::UserNumInc(INT m_roomNum)
+VOID RoomManager::UserNumInc(const INT m_roomNum)
 {
+	ThreadSync::getInstance().Enter();
 	vector_room[m_roomNum]->UserNumInc();
+	ThreadSync::getInstance().Leave();
 }
 
-VOID RoomManager::UserNumDec(INT m_roomNum)
+VOID RoomManager::UserNumDec(const INT m_roomNum)
 {
+	ThreadSync::getInstance().Enter();
 	vector_room[m_roomNum]->UserNumDec();
+	ThreadSync::getInstance().Leave();
 }

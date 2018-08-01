@@ -21,7 +21,7 @@ Session::Session()
 
 Session::~Session() {}
 
-BOOL Session::SessionInit(SOCKET listen_socket, DWORD m_index)
+BOOL Session::SessionInit(const SOCKET listen_socket, const DWORD m_index)
 {
 	index = m_index;
 	memset(session_read_buffer, 0, sizeof(session_read_buffer));
@@ -47,6 +47,7 @@ BOOL Session::SessionInit(SOCKET listen_socket, DWORD m_index)
 
 BOOL Session::InitRead()
 {
+	//초기 받기 진행
 	WSABUF wsabuf;
 	wsabuf.buf = (CHAR*)session_read_buffer;
 	wsabuf.len = MAX_BUFFER;
@@ -60,21 +61,21 @@ BOOL Session::InitRead()
 	return TRUE;
 }
 
-BOOL Session::OnConnected(HANDLE iocp_handle)
+BOOL Session::OnConnected(const HANDLE iocp_handle)
 {
 	CreateIoCompletionPort((HANDLE)session_socket, iocp_handle, (ULONG_PTR)session_socket, 0);
 	InitRead();
 	return TRUE;
 }
 
-BOOL Session::OnRead(DWORD packetLeng)
+BOOL Session::OnRead(const DWORD packetLeng)
 {
 	ReadPacket(session_read_buffer, packetLeng);
 	InitRead();
 	return TRUE;
 }
 
-BOOL Session::Write(DWORD packetLeng, DWORD protocol, BYTE* data)
+BOOL Session::Write(const DWORD packetLeng, const DWORD protocol, const BYTE* data)
 {
 	BYTE temp_write_packet[MAX_BUFFER];
 	MakeWritePacket(protocol, data, packetLeng, temp_write_packet);

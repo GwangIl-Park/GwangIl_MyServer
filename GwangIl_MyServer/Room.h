@@ -8,9 +8,9 @@ private:
 	INT current_user_num;
 	BOOL isPlaying;
 public:
-	BOOL RoomInit(USHORT roomNum);
+	BOOL RoomInit(const USHORT roomNum);
 	BOOL Start();
-	INT GetUserNum() { return current_user_num; }
-	VOID UserNumInc() { current_user_num++; }
-	VOID UserNumDec() { current_user_num--; }
+	INT GetUserNum();
+	VOID UserNumInc();
+	VOID UserNumDec();
 };

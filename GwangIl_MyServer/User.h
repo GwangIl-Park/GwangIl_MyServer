@@ -11,17 +11,17 @@ private:
 	CHAR name[32];
 	INT location;
 public:
-	BOOL UserInit(SOCKET listen_socket, DWORD m_index);
+	BOOL UserInit(const SOCKET listen_socket, const DWORD m_index);
 
-	VOID SetConnected() { isConnected = TRUE; }
-	BOOL GetConnected() { return isConnected; }
-	VOID SetDisconnected(SOCKET listen_socket) { UserInit(listen_socket, index); }
+	VOID SetConnected();
+	BOOL GetConnected();
+	VOID SetDisconnected(const SOCKET listen_socket);
 
-	VOID SetName(CHAR *m_name) { strcpy(name, m_name); }
-	CHAR* GetName() { return name; }
+	VOID SetName(const CHAR *m_name);
+	CHAR* GetName();
 
-	VOID SetLocation(INT m_location) { location = m_location; }
-	INT GetLocation() { return location; }
+	VOID SetLocation(const INT m_location);
+	INT GetLocation();
 
-	DWORD GetIndex() { return index; }
+	DWORD GetIndex();
 };

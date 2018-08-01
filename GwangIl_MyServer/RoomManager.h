@@ -10,8 +10,8 @@ private:
 public:
 	BOOL RoomManagerInit();
 
-	INT GetUserNum(INT m_roomNum);
+	INT GetUserNum(const INT m_roomNum);
 	VOID GetAllUserNum(INT *m_userNum);
-	VOID UserNumInc(INT m_roomNum);
-	VOID UserNumDec(INT m_roomNum);
+	VOID UserNumInc(const INT m_roomNum);
+	VOID UserNumDec(const INT m_roomNum);
 };

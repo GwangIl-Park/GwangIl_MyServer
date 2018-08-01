@@ -4,14 +4,14 @@
 #include"RoomManager.h"
 #include"Packet.h"
 
-BOOL Packet::PacketInit(DWORD m_index)
+BOOL Packet::PacketInit(const DWORD m_index)
 {
 	index = m_index;
 	remainReadLeng = 0;
 	return TRUE;
 }
 
-BOOL Packet::ReadPacket(BYTE *packet, DWORD recvLeng)
+BOOL Packet::ReadPacket(BYTE *packet, const DWORD recvLeng)
 {
 	DWORD packetLeng = 0;
 	DWORD protocol = 0;
@@ -40,7 +40,7 @@ BOOL Packet::ReadPacket(BYTE *packet, DWORD recvLeng)
 	return TRUE;
 }
 
-BOOL Packet::MakeWritePacket(DWORD protocol, BYTE *data, DWORD packetLeng, BYTE *packet)
+BOOL Packet::MakeWritePacket(const DWORD protocol, const BYTE *data, const DWORD packetLeng, BYTE *packet)
 {
 	memcpy(packet, &packetLeng, sizeof(DWORD));
 	memcpy(packet + sizeof(DWORD), &protocol, sizeof(DWORD));
@@ -48,7 +48,7 @@ BOOL Packet::MakeWritePacket(DWORD protocol, BYTE *data, DWORD packetLeng, BYTE 
 	return TRUE;
 }
 
-VOID Packet::PROC_REG_USER(BYTE *packet, DWORD packetLeng)
+VOID Packet::PROC_REG_USER(const BYTE *packet, const DWORD packetLeng)
 {
 	DWORD nameLeng;
 	memcpy(&nameLeng, packet + sizeof(DWORD) * 2, sizeof(DWORD));
@@ -74,7 +74,7 @@ VOID Packet::PROC_REG_USER(BYTE *packet, DWORD packetLeng)
 	UserManager::getInstance().WriteUser(index, (BYTE*)roomMemberCount, sendPacketLeng, PT_REG_USER);
 }
 
-VOID Packet::PROC_USER_CONNECT(BYTE *packet, DWORD packetLeng)
+VOID Packet::PROC_USER_CONNECT(const BYTE *packet, const DWORD packetLeng)
 {
 	DWORD nameLeng;
 	memcpy(&nameLeng, packet + sizeof(DWORD) * 2, sizeof(DWORD));
@@ -100,7 +100,7 @@ VOID Packet::PROC_USER_CONNECT(BYTE *packet, DWORD packetLeng)
 	UserManager::getInstance().WriteUser(index, (BYTE*)roomMemberCount, sendPacketLeng, PT_USER_CON);
 }
 
-VOID Packet::PROC_ROOM_ENTER(BYTE *packet, DWORD packetLeng)
+VOID Packet::PROC_ROOM_ENTER(const BYTE *packet, const DWORD packetLeng)
 {
 	INT roomNum;
 	memcpy(&roomNum, packet + sizeof(DWORD) * 2, sizeof(INT));
@@ -133,7 +133,7 @@ VOID Packet::PROC_ROOM_ENTER(BYTE *packet, DWORD packetLeng)
 	UserManager::getInstance().SetUserLocation(index, roomNum);
 }
 
-VOID Packet::PROC_USER_CHAT(BYTE *packet, DWORD packetLeng)
+VOID Packet::PROC_USER_CHAT(const BYTE *packet, const DWORD packetLeng)
 {
 	INT roomNum = UserManager::getInstance().GetUserLocation(index);
 

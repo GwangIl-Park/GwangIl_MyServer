@@ -16,12 +16,12 @@ private:
 	DWORD remainReadLeng;
 	DWORD sendPacketLeng;
 public:
-	BOOL PacketInit(DWORD m_index);
-	BOOL ReadPacket(BYTE *packet, DWORD recvLeng);
-	BOOL MakeWritePacket(DWORD protocol, BYTE *data, DWORD packetLeng, BYTE *packet);
+	BOOL PacketInit(const DWORD m_index);
+	BOOL ReadPacket(BYTE *packet, const DWORD recvLeng);
+	BOOL MakeWritePacket(const DWORD protocol, const BYTE *data, const DWORD packetLeng, BYTE *packet);
 
-	VOID PROC_REG_USER(BYTE *packet, DWORD packetLeng);
-	VOID PROC_USER_CONNECT(BYTE *packet, DWORD packetLeng);
-	VOID PROC_ROOM_ENTER(BYTE *packet, DWORD packetLeng);
-	VOID PROC_USER_CHAT(BYTE *packet, DWORD packetLeng);
+	VOID PROC_REG_USER(const BYTE *packet, const DWORD packetLeng);
+	VOID PROC_USER_CONNECT(const BYTE *packet, const DWORD packetLeng);
+	VOID PROC_ROOM_ENTER(const BYTE *packet, const DWORD packetLeng);
+	VOID PROC_USER_CHAT(const BYTE *packet, const DWORD packetLeng);
 };
