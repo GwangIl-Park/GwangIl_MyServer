@@ -16,16 +16,19 @@ BOOL UserManager::UserManagerInit(const SOCKET listen_socket)
 
 VOID UserManager::SetUserName(const DWORD m_index, const CHAR *m_name)
 {
+	//해당 유저 이름 설정
 	vector_user[m_index]->SetName(m_name);
 }
 
 CHAR* UserManager::GetUsername(const DWORD m_index)
 {
+	//해당 유저 이름 얻기
 	return vector_user[m_index]->GetName();
 }
 
 BOOL UserManager::CheckUserLogin(const CHAR *m_name)
 {
+	//해당 유저가 연결 중인지 확인
 	for (DWORD i = 0;i < MAX_USER;i++)
 	{
 		if (vector_user[i]->GetConnected() == TRUE)
@@ -41,21 +44,25 @@ BOOL UserManager::CheckUserLogin(const CHAR *m_name)
 
 INT UserManager::GetUserLocation(const DWORD m_index)
 {
+	//해당 유저의 위치 얻기
 	return vector_user[m_index]->GetLocation();
 }
 
 VOID UserManager::SetUserLocation(const DWORD m_index, const INT m_location)
 {
+	//해당 유저 위치 설정
 	vector_user[m_index]->SetLocation(m_location);
 }
 
 INT UserManager::GetUserCount() 
 {
+	//유저 수 얻기
 	return UserCount; 
 }
 
 VOID UserManager::UserCountInc() 
 {
+	//유저 수 증가
 	UserCount++; 
 }
 
@@ -72,7 +79,7 @@ VOID UserManager::GetRoomUsersName(BYTE *m_packet, const INT m_Location, DWORD *
 				DWORD tempNameLeng;
 				CHAR tempName[32];
 				strcpy(tempName, vector_user[i]->GetName());
-				tempNameLeng = strlen(tempName);
+				tempNameLeng = (DWORD)strlen(tempName);
 				std::cout << tempNameLeng;
 				memcpy(m_packet + sizeof(INT) + totalNameLeng, &tempNameLeng, sizeof(DWORD));
 				memcpy(m_packet + sizeof(INT) + sizeof(DWORD) + totalNameLeng, tempName, tempNameLeng);

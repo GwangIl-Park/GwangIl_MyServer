@@ -41,6 +41,7 @@ BOOL Session::SessionInit(const SOCKET listen_socket, const DWORD m_index)
 			return FALSE;
 		}
 	}
+	//소켓 미리 생성해두고 Listen소켓에 Accept신호가 오면 연결
 	PacketInit(m_index);
 	return TRUE;
 }
@@ -63,6 +64,7 @@ BOOL Session::InitRead()
 
 BOOL Session::OnConnected(const HANDLE iocp_handle)
 {
+	//연결 신호가 오면 Accept용 소켓을 IOCP핸들에 연결
 	CreateIoCompletionPort((HANDLE)session_socket, iocp_handle, (ULONG_PTR)session_socket, 0);
 	InitRead();
 	return TRUE;
@@ -70,7 +72,9 @@ BOOL Session::OnConnected(const HANDLE iocp_handle)
 
 BOOL Session::OnRead(const DWORD packetLeng)
 {
+	//읽기 신호 들어왔을때
 	ReadPacket(session_read_buffer, packetLeng);
+	//패킷 처리하고 다시 읽기 진행
 	InitRead();
 	return TRUE;
 }

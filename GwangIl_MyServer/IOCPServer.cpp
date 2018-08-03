@@ -23,6 +23,7 @@ IOCPServer::~IOCPServer() {}
 
 BOOL IOCPServer::CreateListenSocket()
 {
+	//Listen할 소켓 생성
 	listen_socket = WSASocket(PF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
 	if (listen_socket == INVALID_SOCKET)
 	{
@@ -45,13 +46,14 @@ BOOL IOCPServer::CreateListenSocket()
 
 BOOL IOCPServer::InitIOCP()
 {
+	//IOCP핸들 생성
 	iocp_handle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, NULL, 0);
-	CreateIoCompletionPort((HANDLE)listen_socket, iocp_handle, (ULONG_PTR)listen_socket, 0);
+	CreateIoCompletionPort((HANDLE)listen_socket, iocp_handle, (ULONG_PTR)listen_socket, 0); //Listen소켓 IOCP핸들에 등록
 	SYSTEM_INFO system_info;
 	GetSystemInfo(&system_info);
 	for (DWORD i = 0; i < system_info.dwNumberOfProcessors * 2; i++)
 	{
-		_beginthreadex(NULL, 0, WorkerThread, this, 0, NULL);
+		_beginthreadex(NULL, 0, WorkerThread, this, 0, NULL);         //스레드 생성
 	}
 	RoomManager::getInstance().RoomManagerInit();
 	UserManager::getInstance().UserManagerInit(listen_socket);
@@ -61,6 +63,7 @@ BOOL IOCPServer::InitIOCP()
 
 VOID IOCPServer::WorkerThreadMain()
 {
+	//워커스레드
 	DWORD packetLeng = 0;
 	VOID *completionKey = NULL;
 	MYOVERLAPPED *myoverlapped = NULL;
@@ -68,19 +71,19 @@ VOID IOCPServer::WorkerThreadMain()
 	BOOL status;
 	while (TRUE)
 	{
-		status = GetQueuedCompletionStatus(iocp_handle, &packetLeng, (PULONG_PTR)&completionKey, &overlapped, INFINITE);
+		status = GetQueuedCompletionStatus(iocp_handle, &packetLeng, (PULONG_PTR)&completionKey, &overlapped, INFINITE);  //IO신호 받기
 		if (completionKey == NULL)
 			return;
 		myoverlapped = (MYOVERLAPPED*)overlapped;
 		if (status == FALSE || packetLeng == 0)
 		{
-			if (myoverlapped->io_type == IO_ACCEPT)
+			if (myoverlapped->io_type == IO_ACCEPT)                 //유저 등록
 			{
 				User* conUser = (User*)(myoverlapped->object);
 				conUser->SetConnected();
 				conUser->OnConnected(iocp_handle);
 			}
-			else
+			else                                                    //연결 해제
 			{
 				User* disconUser = (User*)(myoverlapped->object);
 				disconUser->SetDisconnected(listen_socket);
@@ -88,7 +91,7 @@ VOID IOCPServer::WorkerThreadMain()
 		}
 		else
 		{
-			if (myoverlapped->io_type == IO_READ)
+			if (myoverlapped->io_type == IO_READ)                  //읽기 신호
 			{
 				User* readUser = (User*)(myoverlapped->object);
 				readUser->OnRead(packetLeng);
