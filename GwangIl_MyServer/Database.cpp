@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include"ThreadSync.h"
 #include"UserManager.h"
 #include"Database.h"
 
@@ -12,7 +11,7 @@ BOOL Database::DBInit()
 
 inline BOOL Database::CONNECT()
 {
-	if (mysql_real_connect(&mysql, "127.0.0.1", "root", "pki117611!", "myserver", 3307, NULL, 0) != 0)
+	if (mysql_real_connect(&mysql, "127.0.0.1", "root", "1234", "myserver", 3307, NULL, 0) != 0)
 	{
 		return FALSE;
 	}
@@ -24,13 +23,11 @@ BOOL Database::DBInsertUser(CHAR* m_name, CHAR* m_password)
 	if (mysql_ping(&mysql) != 0)			//DB연결이 끊어졌을 경우 다시 연결
 		CONNECT();
 	CHAR query[256];
-	ThreadSync::getInstance().Enter();
 	sprintf(query, "insert into user values ('%s', '%s')", m_name, m_password);
 	if (mysql_query(&mysql, query) != 0)
 	{
 		return FALSE;
 	}
-	ThreadSync::getInstance().Leave();
 	UserManager::getInstance().UserCountInc();
 	return TRUE;
 }
@@ -41,7 +38,6 @@ BOOL Database::DBLoginUser(CHAR* m_name, CHAR* m_password)
 		CONNECT();
 
 	CHAR query[256];
-	ThreadSync::getInstance().Enter();
 	sprintf(query, "select userpassword from user where username = '%s'", m_name);
 
 	if (mysql_query(&mysql, query) != 0)
@@ -64,6 +60,5 @@ BOOL Database::DBLoginUser(CHAR* m_name, CHAR* m_password)
 	}
 
 	mysql_free_result(Sql_Result);
-	ThreadSync::getInstance().Leave();
 	return TRUE;
 }

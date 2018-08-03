@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include"ThreadSync.h"
 #include"Room.h"
 #include"RoomManager.h"
 
@@ -33,15 +32,11 @@ VOID RoomManager::GetAllUserNum(INT *m_userNum)
 VOID RoomManager::UserNumInc(const INT m_roomNum)
 {
 	//해당 방의 유저 수 증가
-	ThreadSync::getInstance().Enter();
 	vector_room[m_roomNum]->UserNumInc();
-	ThreadSync::getInstance().Leave();
 }
 
 VOID RoomManager::UserNumDec(const INT m_roomNum)
 {
 	//해당 방의 유저 수 감소
-	ThreadSync::getInstance().Enter();
 	vector_room[m_roomNum]->UserNumDec();
-	ThreadSync::getInstance().Leave();
 }

@@ -1,5 +1,4 @@
 #include"stdafx.h"
-#include"ThreadSync.h"
 #include"Database.h"
 #include"UserManager.h"
 #include"RoomManager.h"

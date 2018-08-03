@@ -91,7 +91,7 @@ VOID Packet::PROC_USER_CONNECT(const BYTE *packet, const DWORD packetLeng)
 	sendPacketLeng = sizeof(DWORD) * 2;
 	if (UserManager::getInstance().CheckUserLogin(name) == TRUE || Database::getInstance().DBLoginUser(name, password) == FALSE) //DB에서 유저 확인
 	{
-		UserManager::getInstance().WriteUser(index, (BYTE*)"\0", sendPacketLeng, PT_REG_USER);            //로그인 실패 전달
+		UserManager::getInstance().WriteUser(index, (BYTE*)"\0", sendPacketLeng, PT_USER_CON);            //로그인 실패 전달
 		return;
 	}
 
@@ -115,7 +115,7 @@ VOID Packet::PROC_ROOM_ENTER(const BYTE *packet, const DWORD packetLeng)
 	CHAR sendUserName[32];
 	DWORD sendUserNameLeng = 0;
 	strcpy((CHAR*)sendUserName, UserManager::getInstance().GetUsername(index));
-	sendUserNameLeng = strlen(sendUserName);
+	sendUserNameLeng = (DWORD)strlen(sendUserName);
 	sendPacketLeng += (sizeof(DWORD) + sendUserNameLeng);
 	memcpy(sendPacket, &sendUserNameLeng, sizeof(DWORD));
 	memcpy(sendPacket + sizeof(DWORD), sendUserName, sendUserNameLeng);
@@ -147,7 +147,7 @@ VOID Packet::PROC_USER_CHAT(const BYTE *packet, const DWORD packetLeng)
 	DWORD UserNameLeng = 0;
 
 	strcpy(UserName, UserManager::getInstance().GetUsername(index));
-	UserNameLeng = strlen(UserName);
+	UserNameLeng = (DWORD)strlen(UserName);
 
 	CHAR Message[1024];
 	DWORD MessageLeng = 0;
