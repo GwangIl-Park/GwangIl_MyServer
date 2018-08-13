@@ -1,7 +1,6 @@
 #include"stdafx.h"
 #include"Packet.h"
 #include"Session.h"
-
 Session::Session()
 {
 	session_socket = NULL;
@@ -21,9 +20,8 @@ Session::Session()
 
 Session::~Session() {}
 
-BOOL Session::SessionInit(const SOCKET listen_socket, const DWORD m_index)
+BOOL Session::SessionInit(const SOCKET listen_socket)
 {
-	index = m_index;
 	memset(session_read_buffer, 0, sizeof(session_read_buffer));
 
 	if (session_socket != NULL)
@@ -42,7 +40,7 @@ BOOL Session::SessionInit(const SOCKET listen_socket, const DWORD m_index)
 		}
 	}
 	//소켓 미리 생성해두고 Listen소켓에 Accept신호가 오면 연결
-	PacketInit(m_index);
+	PacketInit();
 	return TRUE;
 }
 
@@ -72,6 +70,7 @@ BOOL Session::OnConnected(const HANDLE iocp_handle)
 
 BOOL Session::OnRead(const DWORD packetLeng)
 {
+	std::cout << "read" << std::endl;
 	//읽기 신호 들어왔을때
 	ReadPacket(session_read_buffer, packetLeng);
 	//패킷 처리하고 다시 읽기 진행
@@ -81,6 +80,7 @@ BOOL Session::OnRead(const DWORD packetLeng)
 
 BOOL Session::Write(const DWORD packetLeng, const DWORD protocol, const BYTE* data)
 {
+	std::cout << "write" << std::endl;
 	BYTE temp_write_packet[MAX_BUFFER];
 	MakeWritePacket(protocol, data, packetLeng, temp_write_packet);
 	WSABUF wsabuf;
