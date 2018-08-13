@@ -12,9 +12,10 @@ private:
 public:
 	Session();
 	~Session();
-	BOOL SessionInit(const SOCKET listen_socket, const DWORD m_index);
+	BOOL SessionInit(const SOCKET listen_socket);
 	BOOL InitRead();
 	BOOL OnConnected(const HANDLE iocp_handle);
 	BOOL OnRead(const DWORD packetLeng);
 	BOOL Write(const DWORD packetLeng, const DWORD protocol, const BYTE* data);
+	
 };

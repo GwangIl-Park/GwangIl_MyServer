@@ -8,19 +8,13 @@ private:
 	std::vector<User*> vector_user;
 public:
 	BOOL UserManagerInit(const SOCKET listen_socket);
-	VOID SetUserName(const DWORD m_index, const CHAR *m_name);
-	CHAR* GetUsername(const DWORD m_index);
-	BOOL CheckUserLogin(const CHAR *m_name);
+	BOOL CheckUserLogin(const CHAR *m_name) const;
 
-	INT GetUserLocation(const DWORD m_index);
-	VOID SetUserLocation(const DWORD m_index, const INT m_location);
-
-	INT GetUserCount();
+	INT GetUserCount() const;
 	VOID UserCountInc();
 
-	VOID GetRoomUsersName(BYTE *m_packet, const INT m_Location, DWORD *m_packetLeng, const INT m_myindex);
+	VOID GetRoomUsersName(BYTE *m_packet, const INT m_Location, DWORD *m_packetLeng);
 
-	VOID WriteUser(const DWORD m_index, const BYTE *data, const DWORD packetLeng, const DWORD protocol);
 	VOID WriteRoomUsers(const INT m_location, const BYTE *data, const DWORD packetLeng, const DWORD protocol);
 	VOID WriteAll(const BYTE *data, const DWORD packetLeng, const DWORD protocol);
 };

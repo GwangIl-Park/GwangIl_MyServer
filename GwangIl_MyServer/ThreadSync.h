@@ -1,6 +1,6 @@
 #pragma once
 #include"Singleton.h"
-
+#include"stdafx.h"
 class ThreadSync : public Singleton<ThreadSync>
 {
 private:

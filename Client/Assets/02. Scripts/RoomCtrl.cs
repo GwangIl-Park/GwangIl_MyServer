@@ -54,7 +54,7 @@ public class RoomCtrl : MonoBehaviour {
         Buffer.BlockCopy(BitConverter.GetBytes(messageLeng), 0, tempSendBuf, sizeof(int) * 2, sizeof(int));
         Buffer.BlockCopy(Encoding.UTF8.GetBytes(message), 0, tempSendBuf, sizeof(int) * 3, messageLeng);
 
-        mainCtrl.GetSocket().Send(tempSendBuf);
+        Debug.Log(mainCtrl.GetSocket().Send(tempSendBuf, tempSendLen, 0));
     }
 
     public void RecvChat(byte[] m_recvBuf)

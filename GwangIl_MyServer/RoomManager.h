@@ -1,7 +1,7 @@
 #pragma once
-#define MAX_ROOM 6
-#include"Room.h"
 #include"Singleton.h"
+#include"Room.h"
+#define MAX_ROOM 6
 
 class RoomManager : public Singleton<RoomManager>
 {
@@ -10,7 +10,7 @@ private:
 public:
 	BOOL RoomManagerInit();
 
-	INT GetUserNum(const INT m_roomNum);
+	INT GetUserNum(const INT m_roomNum) const;
 	VOID GetAllUserNum(INT *m_userNum);
 	VOID UserNumInc(const INT m_roomNum);
 	VOID UserNumDec(const INT m_roomNum);

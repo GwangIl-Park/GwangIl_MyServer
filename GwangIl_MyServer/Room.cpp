@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include"Room.h"
-
 BOOL Room::RoomInit(const USHORT m_roomNum)
 {
 	roomNum = m_roomNum;
@@ -16,7 +15,7 @@ BOOL Room::Start()
 	return TRUE;
 }
 
-INT Room::GetUserNum()
+INT Room::GetUserNum() const
 {
 	//방에 있는 유저 수 얻기
 	return current_user_num;

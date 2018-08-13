@@ -1,7 +1,6 @@
 #include"stdafx.h"
 #include"UserManager.h"
 #include"Database.h"
-
 BOOL Database::DBInit()
 {
 	mysql_init(&mysql);
@@ -11,7 +10,7 @@ BOOL Database::DBInit()
 
 inline BOOL Database::CONNECT()
 {
-	if (mysql_real_connect(&mysql, "127.0.0.1", "root", "1234", "myserver", 3307, NULL, 0) != 0)
+	if (mysql_real_connect(&mysql, "127.0.0.1", "root", "pki117611!", "myserver", 3307, NULL, 0) != 0)
 	{
 		return FALSE;
 	}

@@ -12,16 +12,16 @@ enum Protocol
 class Packet
 {
 private:
-	DWORD index;
 	DWORD remainReadLeng;
+protected:
 	DWORD sendPacketLeng;
 public:
-	BOOL PacketInit(const DWORD m_index);
+	BOOL PacketInit();
 	BOOL ReadPacket(BYTE *packet, const DWORD recvLeng);
 	BOOL MakeWritePacket(const DWORD protocol, const BYTE *data, const DWORD packetLeng, BYTE *packet);
 
-	VOID PROC_REG_USER(const BYTE *packet, const DWORD packetLeng);
-	VOID PROC_USER_CONNECT(const BYTE *packet, const DWORD packetLeng);
-	VOID PROC_ROOM_ENTER(const BYTE *packet, const DWORD packetLeng);
-	VOID PROC_USER_CHAT(const BYTE *packet, const DWORD packetLeng);
+	virtual VOID PROC_REG_USER(const BYTE *packet, const DWORD packetLeng) = 0;
+	virtual VOID PROC_USER_CONNECT(const BYTE *packet, const DWORD packetLeng) = 0;
+	virtual VOID PROC_ROOM_ENTER(const BYTE *packet, const DWORD packetLeng) = 0;
+	virtual VOID PROC_USER_CHAT(const BYTE *packet, const DWORD packetLeng) = 0;
 };

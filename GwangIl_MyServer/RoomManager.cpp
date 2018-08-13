@@ -1,7 +1,6 @@
 #include"stdafx.h"
 #include"Room.h"
 #include"RoomManager.h"
-
 BOOL RoomManager::RoomManagerInit()
 {
 	vector_room.reserve(6);
@@ -14,7 +13,7 @@ BOOL RoomManager::RoomManagerInit()
 	return TRUE;
 }
 
-INT RoomManager::GetUserNum(const INT m_roomNum)
+INT RoomManager::GetUserNum(const INT m_roomNum) const
 {
 	//해당 방의 유저 수 얻기
 	return vector_room[m_roomNum]->GetUserNum();

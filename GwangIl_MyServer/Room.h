@@ -1,6 +1,5 @@
 #pragma once
 #define MAX_ROOM_USER 6
-#include"User.h"
 class Room
 {
 private:
@@ -10,7 +9,7 @@ private:
 public:
 	BOOL RoomInit(const USHORT roomNum);
 	BOOL Start();
-	INT GetUserNum();
+	INT GetUserNum() const;
 	VOID UserNumInc();
 	VOID UserNumDec();
 };

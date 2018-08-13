@@ -2,8 +2,8 @@
 #include"Database.h"
 #include"UserManager.h"
 #include"RoomManager.h"
+#include"User.h"
 #include"IOCPServer.h"
-
 unsigned WINAPI WorkerThread(VOID *arg)
 {
 	IOCPServer *iocpserver = (IOCPServer*)arg;

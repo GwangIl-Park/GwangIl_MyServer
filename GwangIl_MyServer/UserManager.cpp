@@ -1,7 +1,6 @@
 #include"stdafx.h"
 #include"User.h"
 #include"UserManager.h"
-
 BOOL UserManager::UserManagerInit(const SOCKET listen_socket)
 {
 	UserCount = 0;
@@ -9,24 +8,12 @@ BOOL UserManager::UserManagerInit(const SOCKET listen_socket)
 	{
 		User *newUser = new User();
 		vector_user.push_back(newUser);
-		newUser->UserInit(listen_socket, i);
+		newUser->UserInit(listen_socket);
 	}
 	return TRUE;
 }
 
-VOID UserManager::SetUserName(const DWORD m_index, const CHAR *m_name)
-{
-	//해당 유저 이름 설정
-	vector_user[m_index]->SetName(m_name);
-}
-
-CHAR* UserManager::GetUsername(const DWORD m_index)
-{
-	//해당 유저 이름 얻기
-	return vector_user[m_index]->GetName();
-}
-
-BOOL UserManager::CheckUserLogin(const CHAR *m_name)
+BOOL UserManager::CheckUserLogin(const CHAR *m_name) const
 {
 	//해당 유저가 연결 중인지 확인
 	for (DWORD i = 0;i < MAX_USER;i++)
@@ -42,19 +29,7 @@ BOOL UserManager::CheckUserLogin(const CHAR *m_name)
 	return FALSE;
 }
 
-INT UserManager::GetUserLocation(const DWORD m_index)
-{
-	//해당 유저의 위치 얻기
-	return vector_user[m_index]->GetLocation();
-}
-
-VOID UserManager::SetUserLocation(const DWORD m_index, const INT m_location)
-{
-	//해당 유저 위치 설정
-	vector_user[m_index]->SetLocation(m_location);
-}
-
-INT UserManager::GetUserCount() 
+INT UserManager::GetUserCount() const
 {
 	//유저 수 얻기
 	return UserCount; 
@@ -66,13 +41,13 @@ VOID UserManager::UserCountInc()
 	UserCount++; 
 }
 
-VOID UserManager::GetRoomUsersName(BYTE *m_packet, const INT m_Location, DWORD *m_packetLeng, const INT m_myindex)
+VOID UserManager::GetRoomUsersName(BYTE *m_packet, const INT m_Location, DWORD *m_packetLeng)
 {
 	//방에있는 유저들의 이름을 패킷에 복사
 	DWORD totalNameLeng = 0;
 	for (INT i = 0;i < MAX_USER;i++)
 	{
-		if (vector_user[i]->GetConnected() == TRUE && i != m_myindex)
+		if (vector_user[i]->GetConnected() == TRUE)
 		{
 			if (vector_user[i]->GetLocation() == m_Location)
 			{
@@ -88,12 +63,6 @@ VOID UserManager::GetRoomUsersName(BYTE *m_packet, const INT m_Location, DWORD *
 		}
 	}
 	*m_packetLeng += totalNameLeng;
-}
-
-VOID UserManager::WriteUser(const DWORD m_index, const BYTE *data, const DWORD packetLeng, const DWORD protocol)
-{
-	//해당유저에게 write
-	vector_user[m_index]->Write(packetLeng, protocol, data);
 }
 
 VOID UserManager::WriteRoomUsers(const INT m_location, const BYTE *data, const DWORD packetLeng, const DWORD protocol)

@@ -16,6 +16,7 @@
 #include<vector>
 #include<iostream>
 #include<mysql.h>
+
 #define MAX_BUFFER 4096
 #define MAX_USER 100
 
