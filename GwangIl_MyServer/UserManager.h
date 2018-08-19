@@ -13,8 +13,8 @@ public:
 	INT GetUserCount() const;
 	VOID UserCountInc();
 
-	VOID GetRoomUsersName(BYTE *m_packet, const INT m_Location, DWORD *m_packetLeng);
+	VOID GetRoomUsersName(const INT m_location, Packet &packet);
 
-	VOID WriteRoomUsers(const INT m_location, const BYTE *data, const DWORD packetLeng, const DWORD protocol);
-	VOID WriteAll(const BYTE *data, const DWORD packetLeng, const DWORD protocol);
+	VOID WriteRoomUsers(const INT m_location, Packet &packet);
+	VOID WriteAll(Packet &packet);
 };

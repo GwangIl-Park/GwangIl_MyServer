@@ -79,7 +79,6 @@ VOID IOCPServer::WorkerThreadMain()
 			if (myoverlapped->io_type == IO_ACCEPT)                 //유저 등록
 			{
 				User* conUser = (User*)(myoverlapped->object);
-				conUser->SetConnected();
 				conUser->OnConnected(iocp_handle);
 			}
 			else                                                    //연결 해제

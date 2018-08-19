@@ -21,8 +21,10 @@ public:
 	VOID SetLocation(const INT m_location);
 	INT GetLocation() const;
 
-	VOID PROC_REG_USER(const BYTE *packet, const DWORD packetLeng);
-	VOID PROC_USER_CONNECT(const BYTE *packet, const DWORD packetLeng);
-	VOID PROC_ROOM_ENTER(const BYTE *packet, const DWORD packetLeng);
-	VOID PROC_USER_CHAT(const BYTE *packet, const DWORD packetLeng);
+	virtual VOID ReadPacket(Packet &m_packet);
+
+	VOID PROC_REG_USER(Packet& packet);
+	VOID PROC_USER_CONNECT(Packet& packet);
+	VOID PROC_ROOM_ENTER(Packet& packet);
+	VOID PROC_USER_CHAT(Packet& packet);
 };

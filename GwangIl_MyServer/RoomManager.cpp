@@ -1,4 +1,5 @@
 #include"stdafx.h"
+#include"Packet.h"
 #include"Room.h"
 #include"RoomManager.h"
 BOOL RoomManager::RoomManagerInit()
@@ -19,12 +20,12 @@ INT RoomManager::GetUserNum(const INT m_roomNum) const
 	return vector_room[m_roomNum]->GetUserNum();
 }
 
-VOID RoomManager::GetAllUserNum(INT *m_userNum)
+VOID RoomManager::GetAllUserNum(Packet &packet)
 {
 	//모든 방의 유저 수 얻기
 	for (INT i = 0;i < MAX_ROOM;i++)
 	{
-		m_userNum[i] = vector_room[i]->GetUserNum();
+		packet.WriteINT(vector_room[i]->GetUserNum());
 	}
 }
 

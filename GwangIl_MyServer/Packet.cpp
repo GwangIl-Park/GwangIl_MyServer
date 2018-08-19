@@ -1,46 +1,88 @@
 #include"stdafx.h"
 #include"Packet.h"
-BOOL Packet::PacketInit()
+
+Packet::Packet()
 {
-	remainReadLeng = 0;
-	return TRUE;
+	memset(packet_buffer, 0, MAX_BUFFER);
+	header.h_length = (DWORD*)&packet_buffer[0];
+	header.h_protocol = (Protocol*)&packet_buffer[4];
 }
 
-BOOL Packet::ReadPacket(BYTE *packet, const DWORD recvLeng)
+Packet::Packet(BYTE *m_buffer, DWORD m_packetLeng)
 {
-	//패킷의 프로토콜에 따른 처리 함수 연결
-	DWORD packetLeng = 0;
-	DWORD protocol = 0;
-	memcpy(&packetLeng, packet, sizeof(DWORD));
-	memcpy(&protocol, packet + sizeof(DWORD), sizeof(DWORD));
-	remainReadLeng += recvLeng;
-	switch (protocol)
-	{
-	case PT_REG_USER:
-		PROC_REG_USER(packet, packetLeng);
-		break;
-	case PT_USER_CON:
-		PROC_USER_CONNECT(packet, packetLeng);
-		break;
-	case PT_ROOM_ENTER:
-		PROC_ROOM_ENTER(packet, packetLeng);
-		break;
-	case PT_USER_CHAT:
-		PROC_USER_CHAT(packet, packetLeng);
-	default:
-		break;
-	}
+	memset(packet_buffer, 0, MAX_BUFFER);
+	memcpy(packet_buffer, m_buffer, m_packetLeng);
+	
+	header.h_length = (DWORD*)&packet_buffer[0];
+	header.h_protocol = (Protocol*)&packet_buffer[4];
 
-	memcpy(packet, packet + packetLeng, remainReadLeng);
-	remainReadLeng -= packetLeng;
-	return TRUE;
+	packet_pos = sizeof(DWORD) + sizeof(Protocol);
 }
 
-BOOL Packet::MakeWritePacket(const DWORD protocol, const BYTE *data, const DWORD packetLeng, BYTE *packet)
+Packet::~Packet()
 {
-	//형식에 따라 패킷 생성
-	memcpy(packet, &packetLeng, sizeof(DWORD));
-	memcpy(packet + sizeof(DWORD), &protocol, sizeof(DWORD));
-	memcpy(packet + sizeof(DWORD) + sizeof(DWORD), data, packetLeng);
-	return TRUE;
+
+}
+
+DWORD Packet::GetLength()
+{
+	return *header.h_length;
+}
+
+Protocol Packet::GetProtocol()
+{
+	return *header.h_protocol;
+}
+
+VOID Packet::ReadDWORD(DWORD* data)
+{
+	memcpy(data, packet_buffer + packet_pos, sizeof(DWORD));
+	packet_pos += sizeof(DWORD);
+}
+
+VOID Packet::ReadINT(INT* data)
+{
+	memcpy(data, packet_buffer + packet_pos, sizeof(INT));
+	packet_pos += sizeof(INT);
+}
+
+VOID Packet::ReadString(CHAR* data, DWORD length)
+{
+	memcpy(data, packet_buffer + packet_pos, length);
+	packet_pos += length;
+}
+
+VOID Packet::SetHeader(Protocol protocol)
+{
+	*header.h_protocol = protocol;
+	*header.h_length = sizeof(DWORD) + sizeof(Protocol);
+}
+
+VOID Packet::WriteDWORD(DWORD data)
+{
+	memcpy(packet_buffer + *header.h_length, &data, sizeof(DWORD));
+	*header.h_length += sizeof(DWORD);
+}
+
+VOID Packet::WriteINT(INT data)
+{
+	memcpy(packet_buffer + *header.h_length, &data, sizeof(INT));
+	*header.h_length += sizeof(INT);
+}
+
+VOID Packet::WriteString(CHAR* data, DWORD length)
+{
+	memcpy(packet_buffer + *header.h_length, data, length);
+	*header.h_length += length;
+}
+
+BYTE* Packet::GetBuffer()
+{
+	return packet_buffer;
+}
+
+VOID Packet::PacketClear()
+{
+	memset(packet_buffer, 0, MAX_BUFFER);
+	*header.h_length = 0;
 }

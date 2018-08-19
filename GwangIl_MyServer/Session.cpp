@@ -22,7 +22,7 @@ Session::~Session() {}
 
 BOOL Session::SessionInit(const SOCKET listen_socket)
 {
-	memset(session_read_buffer, 0, sizeof(session_read_buffer));
+	memset(read_buffer, 0, sizeof(read_buffer));
 
 	if (session_socket != NULL)
 	{
@@ -32,7 +32,7 @@ BOOL Session::SessionInit(const SOCKET listen_socket)
 	}
 
 	session_socket = WSASocket(PF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
-	if (AcceptEx(listen_socket, session_socket, session_read_buffer, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &overlapped_accept.overlapped) == FALSE)
+	if (AcceptEx(listen_socket, session_socket, read_buffer, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &overlapped_accept.overlapped) == FALSE)
 	{
 		if (WSAGetLastError() != WSA_IO_PENDING)
 		{
@@ -40,7 +40,6 @@ BOOL Session::SessionInit(const SOCKET listen_socket)
 		}
 	}
 	//소켓 미리 생성해두고 Listen소켓에 Accept신호가 오면 연결
-	PacketInit();
 	return TRUE;
 }
 
@@ -48,7 +47,7 @@ BOOL Session::InitRead()
 {
 	//초기 받기 진행
 	WSABUF wsabuf;
-	wsabuf.buf = (CHAR*)session_read_buffer;
+	wsabuf.buf = (CHAR*)read_buffer;
 	wsabuf.len = MAX_BUFFER;
 	DWORD numberOfBytes = 0;
 	DWORD flag = 0;
@@ -68,24 +67,24 @@ BOOL Session::OnConnected(const HANDLE iocp_handle)
 	return TRUE;
 }
 
-BOOL Session::OnRead(const DWORD packetLeng)
+BOOL Session::OnRead(const DWORD m_packetLeng)
 {
-	std::cout << "read" << std::endl;
+	std::cout << "OnRead" << std::endl;
 	//읽기 신호 들어왔을때
-	ReadPacket(session_read_buffer, packetLeng);
+	Packet recvPacket(read_buffer, m_packetLeng);
+	ReadPacket(recvPacket);
+	memcpy(read_buffer, read_buffer + m_packetLeng, m_packetLeng);
 	//패킷 처리하고 다시 읽기 진행
 	InitRead();
 	return TRUE;
 }
 
-BOOL Session::Write(const DWORD packetLeng, const DWORD protocol, const BYTE* data)
+BOOL Session::Write(Packet &packet)
 {
-	std::cout << "write" << std::endl;
-	BYTE temp_write_packet[MAX_BUFFER];
-	MakeWritePacket(protocol, data, packetLeng, temp_write_packet);
 	WSABUF wsabuf;
-	wsabuf.buf = (CHAR*)temp_write_packet;
-	wsabuf.len = packetLeng;
+	wsabuf.buf = (CHAR*)packet.GetBuffer();
+	wsabuf.len = packet.GetLength();
+	printf("%d", wsabuf.buf[0]);
 	DWORD numberOfBytes;
 	DWORD flag = 0;
 	INT sended = WSASend(session_socket, &wsabuf, 1, &numberOfBytes, flag, &overlapped_write.overlapped, NULL);

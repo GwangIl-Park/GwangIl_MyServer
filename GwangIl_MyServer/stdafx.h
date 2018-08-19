@@ -29,3 +29,12 @@ struct MYOVERLAPPED
 	IO_TYPE io_type;
 	VOID *object;
 };
+
+enum Protocol
+{
+	PT_REG_USER = 1000,
+	PT_USER_CON,
+	PT_ROOM_ENTER,
+	PT_ROOM_USERINC,
+	PT_USER_CHAT
+};

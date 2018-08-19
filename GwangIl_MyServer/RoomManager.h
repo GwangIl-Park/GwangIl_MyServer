@@ -11,7 +11,7 @@ public:
 	BOOL RoomManagerInit();
 
 	INT GetUserNum(const INT m_roomNum) const;
-	VOID GetAllUserNum(INT *m_userNum);
+	VOID GetAllUserNum(Packet &packet);
 	VOID UserNumInc(const INT m_roomNum);
 	VOID UserNumDec(const INT m_roomNum);
 };

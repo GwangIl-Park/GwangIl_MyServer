@@ -86,6 +86,7 @@ public class MainCtrl : MonoBehaviour {
 
     public void ParsePacket()
     {
+        Debug.Log(BitConverter.ToInt32(RecvBuf, 0));
         int protocol = BitConverter.ToInt32(RecvBuf, sizeof(int));
         switch (protocol)
         {
